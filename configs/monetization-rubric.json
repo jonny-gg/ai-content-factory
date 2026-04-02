@@ -1,0 +1,83 @@
+{
+  "weights": {
+    "speedToProduce": 0.2,
+    "commercialIntent": 0.25,
+    "viralPotential": 0.2,
+    "seriesPotential": 0.15,
+    "conversionPotential": 0.15,
+    "competitionGap": 0.05
+  },
+  "nicheScores": {
+    "horror": {
+      "speedToProduce": 9,
+      "commercialIntent": 5,
+      "viralPotential": 9,
+      "seriesPotential": 9,
+      "conversionPotential": 5,
+      "competitionGap": 4,
+      "recommendedOffers": ["怪谈故事包订阅", "短视频代运营脚本包", "起号陪跑"]
+    },
+    "twist": {
+      "speedToProduce": 9,
+      "commercialIntent": 8,
+      "viralPotential": 8,
+      "seriesPotential": 8,
+      "conversionPotential": 8,
+      "competitionGap": 6,
+      "recommendedOffers": ["情感故事脚本包", "情感号私域引流", "情感咨询线索收集"]
+    },
+    "bedtime": {
+      "speedToProduce": 8,
+      "commercialIntent": 7,
+      "viralPotential": 5,
+      "seriesPotential": 7,
+      "conversionPotential": 7,
+      "competitionGap": 6,
+      "recommendedOffers": ["儿童故事音频包", "睡前故事会员", "亲子内容社群"]
+    },
+    "folktale": {
+      "speedToProduce": 7,
+      "commercialIntent": 6,
+      "viralPotential": 6,
+      "seriesPotential": 8,
+      "conversionPotential": 6,
+      "competitionGap": 7,
+      "recommendedOffers": ["国风故事专栏", "传统文化内容会员", "文化类账号代运营"]
+    },
+    "anime": {
+      "speedToProduce": 6,
+      "commercialIntent": 6,
+      "viralPotential": 7,
+      "seriesPotential": 8,
+      "conversionPotential": 6,
+      "competitionGap": 5,
+      "recommendedOffers": ["二次元剧情号脚本包", "动漫风 IP 孵化", "角色故事连载"]
+    }
+  },
+  "topicModifiers": [
+    {
+      "name": "containsStrongEmotion",
+      "keywords": ["婚礼", "分手", "求婚", "晚安", "未来", "十年后", "陌生短信"],
+      "bonus": {
+        "commercialIntent": 1,
+        "viralPotential": 1,
+        "conversionPotential": 1
+      }
+    },
+    {
+      "name": "containsSuspense",
+      "keywords": ["深夜", "凌晨", "门铃", "电梯", "最后一位", "没人住", "红绳", "不回头"],
+      "bonus": {
+        "viralPotential": 1,
+        "seriesPotential": 1
+      }
+    },
+    {
+      "name": "containsLowCostScene",
+      "keywords": ["便利店", "楼道", "电梯", "同学会", "手机", "短信", "活动室"],
+      "bonus": {
+        "speedToProduce": 1
+      }
+    }
+  ]
+}

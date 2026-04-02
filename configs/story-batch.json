@@ -1,0 +1,25 @@
+{
+  "items": [
+    {
+      "niche": "horror",
+      "topic": "深夜电梯里的红雨伞",
+      "platform": "douyin",
+      "durationSeconds": 60,
+      "generateImages": false
+    },
+    {
+      "niche": "twist",
+      "topic": "婚礼前一天收到一条陌生短信",
+      "platform": "xiaohongshu",
+      "durationSeconds": 45,
+      "generateImages": false
+    },
+    {
+      "niche": "anime",
+      "topic": "转学生第一天就看见了未来",
+      "platform": "tiktok",
+      "durationSeconds": 60,
+      "generateImages": false
+    }
+  ]
+}

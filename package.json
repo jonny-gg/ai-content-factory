@@ -1,0 +1,35 @@
+{
+  "name": "ai-content-factory",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "story": "npx ts-node story-cli.ts",
+    "story:batch": "npx ts-node story-batch.ts",
+    "topics:pick": "npx ts-node topic-picker.ts",
+    "topics:monetize": "npx ts-node topic-monetization.ts",
+    "topics:monetize:diverse": "npx ts-node topic-monetization.ts 10 --diverse --max-per-niche=1 --min-distinct=3",
+    "topics:assets": "npx ts-node topics-to-assets.ts",
+    "topics:daily": "npm run topics:monetize:diverse && npx ts-node topics-to-assets.ts 3 douyin --diverse-only && npx ts-node daily-summary.ts",
+    "topics:summary": "npx ts-node daily-summary.ts",
+    "story:weekly": "npx ts-node story-weekly.ts",
+    "story:weekly:matrix": "npx ts-node story-weekly-matrix.ts",
+    "short-drama": "npx ts-node short-drama-cli.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node-fetch": "^2.6.13",
+    "commander": "^12.1.0",
+    "edge-tts": "^1.0.1",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.104.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.4.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
