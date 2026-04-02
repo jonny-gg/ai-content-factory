@@ -11,6 +11,7 @@ export interface RuntimeConfig {
 }
 
 const DEFAULT_RUNTIME_CONFIG: RuntimeConfig = {
+  model: 'gpt-5.4',
   outputDir: 'outputs',
   temperature: 0.7,
   maxTokens: 4096,

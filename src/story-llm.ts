@@ -106,7 +106,7 @@ export class StoryLLMService {
     const rawBaseURL = env.LLM_BASE_URL || env.OPENAI_BASE_URL || env.base_url || 'https://api.openai.com/v1';
     const baseURL = normalizeOpenAIBaseURL(rawBaseURL, this.wireApi);
     this.baseURL = baseURL;
-    this.model = env.LLM_MODEL || env.OPENAI_MODEL || 'gpt-4.1-mini';
+    this.model = env.LLM_MODEL || env.OPENAI_MODEL || 'gpt-5.4';
     this.fetchImpl = options?.fetchImpl || fetch;
   }
 
