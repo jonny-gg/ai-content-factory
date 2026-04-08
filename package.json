@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx ts-node tests/story-llm-default-model.test.ts",
+    "test": "npx ts-node tests/run-all.ts",
     "typecheck": "npx tsc --noEmit",
-    "test:all": "npm run test && npm run typecheck", 
+    "test:all": "npm run typecheck && npm test",
     "story": "npx ts-node story-cli.ts",
     "story:batch": "npx ts-node story-batch.ts",
     "topics:pick": "npx ts-node topic-picker.ts",

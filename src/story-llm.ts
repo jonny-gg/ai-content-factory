@@ -1,5 +1,6 @@
 import fetch, { type RequestInit } from 'node-fetch';
 import { z } from 'zod';
+import { withRetry, withTimeout } from './pipeline-utils';
 
 export interface StoryLLMScene {
   scene: number;
@@ -51,7 +52,7 @@ const StoryResponseSchema = z.object({
 });
 
 export function resolveWireApi(env: NodeJS.ProcessEnv = process.env): OpenAIWireApi {
-  const raw = (env.LLM_WIRE_API || env.OPENAI_WIRE_API || 'responses').trim();
+  const raw = (env.LLM_WIRE_API || env.OPENAI_WIRE_API || env.wire_api || 'responses').trim().toLowerCase();
   if (raw === 'responses') {
     return 'responses';
   }
@@ -60,12 +61,17 @@ export function resolveWireApi(env: NodeJS.ProcessEnv = process.env): OpenAIWire
 }
 
 export function normalizeOpenAIBaseURL(baseURL: string, wireApi: OpenAIWireApi): string {
-  const trimmed = baseURL.trim().replace(/\/+$/, '');
-  if (wireApi === 'responses') {
-    return trimmed.endsWith('/v1') ? trimmed : `${trimmed}/v1`;
+  const trimmed = baseURL.trim();
+  if (!trimmed) {
+    return 'https://api.openai.com/v1';
   }
 
-  return trimmed;
+  if (wireApi !== 'responses') {
+    return trimmed.replace(/\/+$/, '');
+  }
+
+  const normalized = trimmed.replace(/\/+$/, '');
+  return normalized.endsWith('/v1') ? normalized : `${normalized}/v1`;
 }
 
 export function buildResponsesEndpoint(baseURL: string): string {
@@ -142,18 +148,32 @@ export class StoryLLMService {
     );
     const endpoint = buildResponsesEndpoint(normalizedBaseUrl);
     const model = this.env.LLM_MODEL || this.env.OPENAI_MODEL || 'gpt-5.4';
+    const timeoutMs = Number(this.env.REQUEST_TIMEOUT_MS || 45000);
+    const maxRetries = Number(this.env.MAX_RETRIES || 3);
+    const retryBaseDelayMs = Number(this.env.RETRY_BASE_DELAY_MS || 1500);
 
-    const response = await this.fetchImpl(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model,
-        input: buildPrompt(request)
-      })
-    });
+    const response = await withRetry(
+      'story-llm',
+      async () => withTimeout(
+        this.fetchImpl(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model,
+            input: buildPrompt(request)
+          })
+        }),
+        timeoutMs,
+        'Story LLM request'
+      ),
+      {
+        retries: Number.isFinite(maxRetries) && maxRetries > 0 ? Math.floor(maxRetries) : 3,
+        baseDelayMs: Number.isFinite(retryBaseDelayMs) && retryBaseDelayMs > 0 ? Math.floor(retryBaseDelayMs) : 1500
+      }
+    );
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -168,4 +188,52 @@ export class StoryLLMService {
 
     return parseStoryJson(outputText);
   }
+}
+
+export function createStoryLlmClient(options?: {
+  llmApiKey?: string;
+  openaiApiKey?: string;
+  llmBaseUrl?: string;
+  openaiBaseUrl?: string;
+  llmModel?: string;
+  openaiModel?: string;
+  wireApi?: OpenAIWireApi;
+  env?: EnvSource;
+  fetchImpl?: FetchFn;
+}): {
+  config: {
+    apiKey?: string;
+    baseURL: string;
+    model: string;
+    wireApi: OpenAIWireApi;
+  };
+  service: StoryLLMService;
+} {
+  const env = {
+    ...(options?.env || process.env),
+    ...(options?.llmApiKey ? { LLM_API_KEY: options.llmApiKey } : {}),
+    ...(options?.openaiApiKey ? { OPENAI_API_KEY: options.openaiApiKey } : {}),
+    ...(options?.llmBaseUrl ? { LLM_BASE_URL: options.llmBaseUrl } : {}),
+    ...(options?.openaiBaseUrl ? { OPENAI_BASE_URL: options.openaiBaseUrl } : {}),
+    ...(options?.llmModel ? { LLM_MODEL: options.llmModel } : {}),
+    ...(options?.openaiModel ? { OPENAI_MODEL: options.openaiModel } : {}),
+    ...(options?.wireApi ? { LLM_WIRE_API: options.wireApi } : {})
+  } as EnvSource;
+
+  const wireApi = resolveWireApi(env);
+  const baseURL = normalizeOpenAIBaseURL(
+    env.LLM_BASE_URL || env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
+    wireApi
+  );
+  const model = env.LLM_MODEL || env.OPENAI_MODEL || 'gpt-5.4';
+
+  return {
+    config: {
+      apiKey: env.LLM_API_KEY || env.OPENAI_API_KEY,
+      baseURL,
+      model,
+      wireApi
+    },
+    service: new StoryLLMService({ env, fetchImpl: options?.fetchImpl })
+  };
 }

@@ -1,6 +1,6 @@
-import { loadOptionalTemplate, loadRuntimeConfig, type RuntimeConfig } from './load-runtime-config';
+import { loadOptionalTemplate, loadRuntimeConfig, type RuntimeConfig, type LoadRuntimeConfigOptions } from './load-runtime-config';
 
-export interface StoryCliOptions {
+export interface StoryCliOptions extends LoadRuntimeConfigOptions {
   config?: string;
   template?: string;
   topic?: string;
@@ -13,10 +13,15 @@ export interface ResolvedStoryRun {
   template: string;
   topic?: string;
   style?: string;
+  dryRun: boolean;
 }
 
 export function resolveStoryRun(options: StoryCliOptions = {}): ResolvedStoryRun {
-  const config = loadRuntimeConfig(options.config);
+  const config = loadRuntimeConfig({
+    configPath: options.config ?? options.configPath,
+    allowMissingLlmApiKey: options.allowMissingLlmApiKey,
+    env: options.env
+  });
   const template = loadOptionalTemplate(options.template) || (typeof config.template === 'string' ? config.template : '');
 
   return {
@@ -24,29 +29,24 @@ export function resolveStoryRun(options: StoryCliOptions = {}): ResolvedStoryRun
     template,
     topic: options.topic,
     style: options.style,
+    dryRun: typeof options.dryRun === 'boolean' ? options.dryRun : config.dryRun
   };
 }
 
 export async function runStoryGenerationCli(options: StoryCliOptions = {}): Promise<void> {
   const resolved = resolveStoryRun(options);
 
-  if (options.dryRun) {
+  if (resolved.dryRun) {
     console.log(JSON.stringify({
       ok: true,
       mode: 'story',
       config: resolved.config,
       hasTemplate: resolved.template.length > 0,
       topic: resolved.topic ?? null,
-      style: resolved.style ?? null,
+      style: resolved.style ?? null
     }, null, 2));
     return;
   }
 
   console.log('Story generation pipeline is ready.');
-  console.log(JSON.stringify({
-    mode: 'story',
-    hasTemplate: resolved.template.length > 0,
-    topic: resolved.topic ?? null,
-    style: resolved.style ?? null,
-  }, null, 2));
 }

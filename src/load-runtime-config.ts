@@ -7,6 +7,18 @@ export interface RuntimeConfig extends AppConfig {
   template?: string;
 }
 
+export interface LoadRuntimeConfigOptions {
+  configPath?: string;
+  allowMissingLlmApiKey?: boolean;
+  env?: NodeJS.ProcessEnv;
+}
+
+interface NormalizedLoadRuntimeConfigOptions {
+  configPath?: string;
+  allowMissingLlmApiKey: boolean;
+  env: NodeJS.ProcessEnv;
+}
+
 function readJsonConfig(configPath?: string): Partial<RuntimeConfig> {
   if (!configPath) {
     return {};
@@ -36,12 +48,8 @@ export function loadOptionalTemplate(templatePath?: string): string {
   return readFileSync(templatePath, 'utf8');
 }
 
-export function loadRuntimeConfig(configPathOrEnv?: string | NodeJS.ProcessEnv): RuntimeConfig {
-  const env = typeof configPathOrEnv === 'string' || typeof configPathOrEnv === 'undefined'
-    ? process.env
-    : configPathOrEnv;
-  const fileConfig = typeof configPathOrEnv === 'string' ? readJsonConfig(configPathOrEnv) : {};
-  const config = loadAppConfig({
+function buildEnvFromFileConfig(env: NodeJS.ProcessEnv, fileConfig: Partial<RuntimeConfig>): NodeJS.ProcessEnv {
+  return {
     ...env,
     ...(fileConfig.llmApiKey ? { LLM_API_KEY: fileConfig.llmApiKey } : {}),
     ...(fileConfig.llmBaseUrl ? { LLM_BASE_URL: fileConfig.llmBaseUrl } : {}),
@@ -52,17 +60,61 @@ export function loadRuntimeConfig(configPathOrEnv?: string | NodeJS.ProcessEnv):
     ...(fileConfig.requestTimeoutMs ? { REQUEST_TIMEOUT_MS: String(fileConfig.requestTimeoutMs) } : {}),
     ...(fileConfig.maxRetries ? { MAX_RETRIES: String(fileConfig.maxRetries) } : {}),
     ...(fileConfig.retryBaseDelayMs ? { RETRY_BASE_DELAY_MS: String(fileConfig.retryBaseDelayMs) } : {})
-  });
+  };
+}
 
-  ensureRequiredEnv(['LLM_API_KEY'], {
-    ...env,
-    LLM_API_KEY: fileConfig.llmApiKey || env.LLM_API_KEY || env.OPENAI_API_KEY
-  });
+function isLoadRuntimeConfigOptions(value: unknown): value is LoadRuntimeConfigOptions {
+  return Boolean(value)
+    && typeof value === 'object'
+    && !('PATH' in (value as Record<string, unknown>))
+    && (
+      'configPath' in (value as Record<string, unknown>)
+      || 'allowMissingLlmApiKey' in (value as Record<string, unknown>)
+      || 'env' in (value as Record<string, unknown>)
+    );
+}
+
+function normalizeOptions(configPathOrEnvOrOptions?: string | NodeJS.ProcessEnv | LoadRuntimeConfigOptions): NormalizedLoadRuntimeConfigOptions {
+  if (typeof configPathOrEnvOrOptions === 'string' || typeof configPathOrEnvOrOptions === 'undefined') {
+    return {
+      configPath: configPathOrEnvOrOptions,
+      allowMissingLlmApiKey: false,
+      env: process.env,
+    };
+  }
+
+  if (isLoadRuntimeConfigOptions(configPathOrEnvOrOptions)) {
+    return {
+      configPath: configPathOrEnvOrOptions.configPath,
+      allowMissingLlmApiKey: configPathOrEnvOrOptions.allowMissingLlmApiKey ?? false,
+      env: configPathOrEnvOrOptions.env ?? process.env,
+    };
+  }
+
+  return {
+    configPath: undefined,
+    allowMissingLlmApiKey: false,
+    env: configPathOrEnvOrOptions,
+  };
+}
+
+export function loadRuntimeConfig(configPathOrEnvOrOptions?: string | NodeJS.ProcessEnv | LoadRuntimeConfigOptions): RuntimeConfig {
+  const options = normalizeOptions(configPathOrEnvOrOptions);
+  const fileConfig = readJsonConfig(options.configPath);
+  const mergedEnv = buildEnvFromFileConfig(options.env, fileConfig);
+  const config = loadAppConfig(mergedEnv);
+
+  if (!options.allowMissingLlmApiKey) {
+    ensureRequiredEnv(['LLM_API_KEY'], {
+      ...mergedEnv,
+      LLM_API_KEY: mergedEnv.LLM_API_KEY || mergedEnv.OPENAI_API_KEY
+    });
+  }
 
   return {
     ...config,
-    telegramBotToken: fileConfig.telegramBotToken || env.TELEGRAM_BOT_TOKEN,
-    telegramChatId: fileConfig.telegramChatId || env.TELEGRAM_CHAT_ID,
+    telegramBotToken: fileConfig.telegramBotToken || options.env.TELEGRAM_BOT_TOKEN,
+    telegramChatId: fileConfig.telegramChatId || options.env.TELEGRAM_CHAT_ID,
     template: fileConfig.template
   };
 }

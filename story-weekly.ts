@@ -18,10 +18,18 @@ function pickWithoutReplacement(items: string[], count: number): string[] {
   return result;
 }
 
+function parseArgs(argv: string[]): { niche: StoryNiche; platform: StoryPlatform; days: number; dryRun: boolean } {
+  const positional = argv.filter((arg) => !arg.startsWith('--'));
+  return {
+    niche: (positional[0] || 'horror') as StoryNiche,
+    platform: (positional[1] || 'douyin') as StoryPlatform,
+    days: Number(positional[2] || 7),
+    dryRun: argv.includes('--dry-run'),
+  };
+}
+
 async function main() {
-  const niche = (process.argv[2] || 'horror') as StoryNiche;
-  const platform = (process.argv[3] || 'douyin') as StoryPlatform;
-  const days = Number(process.argv[4] || 7);
+  const { niche, platform, days, dryRun } = parseArgs(process.argv.slice(2));
 
   const bankPath = path.join(process.cwd(), 'configs', 'topic-bank.json');
   const bank = JSON.parse(fs.readFileSync(bankPath, 'utf-8')) as Record<string, string[]>;
@@ -37,13 +45,13 @@ async function main() {
   fs.mkdirSync(weeklyDir, { recursive: true });
 
   const items = selectedTopics.map((topic, index) => {
-    const resolved = resolveStoryRun({ topic, style: niche });
+    const resolved = resolveStoryRun({ topic, style: niche, dryRun });
     return {
       day: index + 1,
       topic,
       title: topic,
       exportDir: resolved.config.outputDir,
-      generationMode: 'resolved-only',
+      generationMode: dryRun ? 'dry-run' : 'resolved-only',
       hashtags: [`#${niche}`, '#短视频', '#AI内容'],
       hasTemplate: resolved.template.length > 0,
     };
@@ -54,6 +62,7 @@ async function main() {
     platform,
     days: items.length,
     weeklyDir,
+    dryRun,
     items
   };
 
@@ -65,6 +74,7 @@ async function main() {
     `- Niche: ${niche}`,
     `- Platform: ${platform}`,
     `- Days: ${items.length}`,
+    `- DryRun: ${dryRun}`,
     '',
     '## Schedule',
     ...items.map(item => `### Day ${item.day}\n- Topic: ${item.topic}\n- Title: ${item.title}\n- Mode: ${item.generationMode}\n- OutputDir: ${item.exportDir}\n- Tags: ${item.hashtags.join(' ')}`)

@@ -5,9 +5,17 @@ import { execSync } from 'child_process';
 type StoryPlatform = 'douyin' | 'xiaohongshu' | 'tiktok' | 'youtube-shorts' | 'bilibili';
 type StoryNiche = 'horror' | 'twist' | 'anime';
 
+function parseArgs(argv: string[]): { platform: StoryPlatform; days: number; dryRun: boolean } {
+  const positional = argv.filter((arg) => !arg.startsWith('--'));
+  return {
+    platform: (positional[0] || 'douyin') as StoryPlatform,
+    days: Number(positional[1] || 3),
+    dryRun: argv.includes('--dry-run'),
+  };
+}
+
 async function main() {
-  const platform = (process.argv[2] || 'douyin') as StoryPlatform;
-  const days = Number(process.argv[3] || 3);
+  const { platform, days, dryRun } = parseArgs(process.argv.slice(2));
   const niches: StoryNiche[] = ['horror', 'twist', 'anime'];
   const matrixDir = path.join(process.cwd(), 'output', 'weekly-matrix', `${platform}_${Date.now()}`);
   fs.mkdirSync(matrixDir, { recursive: true });
@@ -15,7 +23,8 @@ async function main() {
   const results: Array<{ niche: StoryNiche; output: string }> = [];
 
   for (const niche of niches) {
-    const output = execSync(`npx ts-node story-weekly.ts ${niche} ${platform} ${days}`, {
+    const command = ['npx', 'ts-node', 'story-weekly.ts', niche, platform, String(days), ...(dryRun ? ['--dry-run'] : [])].join(' ');
+    const output = execSync(command, {
       cwd: process.cwd(),
       encoding: 'utf-8',
       stdio: ['pipe', 'pipe', 'pipe']
@@ -26,8 +35,8 @@ async function main() {
     results.push({ niche, output: filePath });
   }
 
-  fs.writeFileSync(path.join(matrixDir, 'matrix-summary.json'), JSON.stringify(results, null, 2), 'utf-8');
-  console.log(JSON.stringify({ matrixDir, results }, null, 2));
+  fs.writeFileSync(path.join(matrixDir, 'matrix-summary.json'), JSON.stringify({ dryRun, results }, null, 2), 'utf-8');
+  console.log(JSON.stringify({ matrixDir, dryRun, results }, null, 2));
 }
 
 main().catch((error) => {

@@ -9,7 +9,7 @@ module.exports = {
     watch: false,
     max_memory_restart: '1G',
     kill_timeout: 30000,
-    wait_ready: true,
+    wait_ready: false,
     log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
     error_file: './logs/pm2-error.log',
     out_file: './logs/pm2-out.log',
