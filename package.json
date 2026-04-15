@@ -1,38 +1,27 @@
 {
   "name": "ai-content-factory",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "test": "npx ts-node tests/run-all.ts",
-    "typecheck": "npx tsc --noEmit",
-    "test:all": "npm run typecheck && npm test",
-    "story": "npx ts-node story-cli.ts",
-    "story:batch": "npx ts-node story-batch.ts",
-    "topics:pick": "npx ts-node topic-picker.ts",
-    "topics:monetize": "npx ts-node topic-monetization.ts",
-    "topics:monetize:diverse": "npx ts-node topic-monetization.ts 10 --diverse --max-per-niche=1 --min-distinct=3",
-    "topics:assets": "npx ts-node topics-to-assets.ts",
-    "topics:daily": "npm run topics:monetize:diverse && npx ts-node topics-to-assets.ts 3 douyin --diverse-only && npx ts-node daily-summary.ts",
-    "topics:summary": "npx ts-node daily-summary.ts",
-    "story:weekly": "npx ts-node story-weekly.ts",
-    "story:weekly:matrix": "npx ts-node story-weekly-matrix.ts",
-    "short-drama": "npx ts-node short-drama-cli.ts"
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "story": "tsx story-cli.ts",
+    "assets": "tsx assets-cli.ts",
+    "render": "tsx render-cli.ts",
+    "full": "tsx full-pipeline-cli.ts",
+    "batch": "tsx story-batch.ts",
+    "test": "node --test --import tsx"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@types/node-fetch": "^2.6.13",
     "commander": "^12.1.0",
-    "edge-tts": "^1.0.1",
-    "node-fetch": "^3.3.2",
-    "openai": "^4.104.0",
-    "zod": "^3.25.76"
+    "dotenv": "^16.4.5",
+    "openai": "^4.56.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^25.4.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "@types/node": "^22.7.4",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
   }
 }

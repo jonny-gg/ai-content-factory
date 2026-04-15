@@ -1,19 +1,14 @@
-// src/index.ts
-export { ImageService } from './image-service';
-export { TTSService } from './tts-service';
-export {
-  resolveStoryRun,
-  runStoryGenerationCli,
-  type StoryCliOptions,
-  type ResolvedStoryRun,
-} from './story-factory';
-export { StoryLLMService } from './story-llm';
-export {
-  resolveShortDramaRun,
-  runShortDramaGenerationCli,
-  type ShortDramaCliOptions,
-  type ResolvedShortDramaRun,
-} from './short-drama-factory';
-export { writeDeliveryChecklist } from './delivery-kit';
-export { buildPlatformGuidance, type SupportedPlatform } from './platform-template';
-export { loadRuntimeConfig, loadOptionalTemplate, type RuntimeConfig } from './load-runtime-config';
+export * from './core/types';
+export * from './core/run-context';
+export * from './engines/story/story-engine';
+export * from './pipelines/generate-story-package';
+export * from './story-factory';
+export * from './short-drama-factory';
+export * from './assets-factory';
+export * from './pipelines/generate-assets';
+export * from './image-service';
+export * from './tts-service';
+export * from './render-factory';
+export * from './pipelines/render-video';
+export * from './full-pipeline';
+export * from './full-pipeline-factory';
