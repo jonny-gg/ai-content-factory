@@ -7,9 +7,11 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "story": "tsx story-cli.ts",
+    "chapter": "tsx chapter-cli.ts",
     "assets": "tsx assets-cli.ts",
     "render": "tsx render-cli.ts",
     "full": "tsx full-pipeline-cli.ts",
+    "delivery": "tsx delivery-export-cli.ts",
     "batch": "tsx story-batch.ts",
     "test": "node --test --import tsx"
   },

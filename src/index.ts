@@ -12,3 +12,6 @@ export * from './render-factory';
 export * from './pipelines/render-video';
 export * from './full-pipeline';
 export * from './full-pipeline-factory';
+export * from './delivery-kit';
+export * from './delivery-export-factory';
+export * from './chapter-adapter';

@@ -1,0 +1,247 @@
+{
+  "seriesId": "office-revenge-side-hustle-001",
+  "seriesTitle": "被当众开除后，我让全公司排队求我回来",
+  "baseDir": "story-assets",
+  "totalChapters": 20,
+  "recommendedBatchStrategy": {
+    "phase1": [1, 2, 3, 4],
+    "phase2": [5, 6],
+    "phase3": [7, 8, 9, 10],
+    "phase4": [11, 12, 13, 14, 15],
+    "phase5": [16, 17, 18, 19, 20]
+  },
+  "stages": [
+    {
+      "stageId": "stage-01",
+      "name": "跌到底",
+      "chapters": [1, 2, 3, 4],
+      "summary": "建立主角低谷、职场羞辱、被开除和感情补刀的压抑前期。"
+    },
+    {
+      "stageId": "stage-02",
+      "name": "副业起盘",
+      "chapters": [5, 6],
+      "summary": "主角从谷底开始行动，并拿到第一笔副业收入。"
+    },
+    {
+      "stageId": "stage-03",
+      "name": "旧世界后悔",
+      "chapters": [7, 8, 9, 10],
+      "summary": "旧公司开始出问题，客户和前同事逐步承认主角的价值。"
+    },
+    {
+      "stageId": "stage-04",
+      "name": "爽感加速",
+      "chapters": [11, 12, 13, 14, 15],
+      "summary": "副业爆单、前女友回头、公司回聘、会议室打脸、商业反杀全面展开。"
+    },
+    {
+      "stageId": "stage-05",
+      "name": "终局收割",
+      "chapters": [16, 17, 18, 19, 20],
+      "summary": "团队成型、感情线彻底收束、公开反杀、收入验证、最终不再回头。"
+    }
+  ],
+  "chapters": [
+    {
+      "chapterNumber": 1,
+      "chapterId": "ch01",
+      "title": "背锅的人",
+      "file": "story-assets/chapter-01-production-pack.json",
+      "targetDurationSec": 70,
+      "stage": "stage-01",
+      "hook": "项目明明是我做的，功劳却是别人的；连最亲近的人，也觉得我没前途。",
+      "nextHook": "第二天的会议，会把我最后一点幻想彻底打碎。"
+    },
+    {
+      "chapterNumber": 2,
+      "chapterId": "ch02",
+      "title": "当众羞辱",
+      "file": "story-assets/chapter-02-production-pack.json",
+      "targetDurationSec": 75,
+      "stage": "stage-01",
+      "hook": "我明明知道问题出在哪，可在那间会议室里，真相一点都不重要。",
+      "nextHook": "下午两点，人事发来消息：来会议室聊一下。"
+    },
+    {
+      "chapterNumber": 3,
+      "chapterId": "ch03",
+      "title": "被开除的那一刻",
+      "file": "story-assets/chapter-03-production-pack.json",
+      "targetDurationSec": 78,
+      "stage": "stage-01",
+      "hook": "他们不是来和我讲道理的，他们只是来通知我：你可以走了。",
+      "nextHook": "晚上，她发来消息：见一面吧，我有话想跟你说。"
+    },
+    {
+      "chapterNumber": 4,
+      "chapterId": "ch04",
+      "title": "前女友的最后一刀",
+      "file": "story-assets/chapter-04-production-pack.json",
+      "targetDurationSec": 80,
+      "stage": "stage-01",
+      "hook": "我以为她至少会安慰我几句，结果她只是来告诉我：她也不要我了。",
+      "nextHook": "第二天，我把产品发进了几个群，而第一个机会，比我想象中来得更快。"
+    },
+    {
+      "chapterNumber": 5,
+      "chapterId": "ch05",
+      "title": "那个没人看上的副业",
+      "file": "story-assets/chapter-05-production-pack.json",
+      "targetDurationSec": 82,
+      "stage": "stage-02",
+      "hook": "所有人都觉得我完了，可我偏偏在最狼狈的时候，翻出了那件真正属于自己的东西。",
+      "nextHook": "第二天，我把产品发进了几个群里，而第一个机会，比我想象中来得更快。"
+    },
+    {
+      "chapterNumber": 6,
+      "chapterId": "ch06",
+      "title": "第一笔钱",
+      "file": "story-assets/chapter-06-production-pack.json",
+      "targetDurationSec": 82,
+      "stage": "stage-02",
+      "hook": "999块，不算多，却是我第一次靠自己做的东西赚到的钱。",
+      "nextHook": "就在我以为自己终于找到出口的时候，原公司那边也开始发现：他们离开我，根本玩不转。"
+    },
+    {
+      "chapterNumber": 7,
+      "chapterId": "ch07",
+      "title": "老东家的麻烦开始了",
+      "file": "story-assets/chapter-07-production-pack.json",
+      "targetDurationSec": 84,
+      "stage": "stage-03",
+      "hook": "他们一直觉得公司离了谁都照样转，直到我真的走了，他们才发现很多流程根本不是流程，是我在硬撑。",
+      "nextHook": "这一次，客户没有通过公司，而是直接来找我。"
+    },
+    {
+      "chapterNumber": 8,
+      "chapterId": "ch08",
+      "title": "第一次反转谈判",
+      "file": "story-assets/chapter-08-production-pack.json",
+      "targetDurationSec": 84,
+      "stage": "stage-03",
+      "hook": "以前我是坐在会议室后排被人决定命运的人，这一次，终于轮到别人来听我怎么说。",
+      "nextHook": "这一次，我不再是替别人做结果的人，我开始让结果直接落在自己身上。"
+    },
+    {
+      "chapterNumber": 9,
+      "chapterId": "ch09",
+      "title": "第一次反转合作",
+      "file": "story-assets/chapter-09-production-pack.json",
+      "targetDurationSec": 86,
+      "stage": "stage-03",
+      "hook": "以前我是在替别人把结果做出来，这一次，结果终于开始直接落在我自己头上。",
+      "nextHook": "旧公司终于开始意识到，那个他们亲手推走的人，才是最会做结果的人。"
+    },
+    {
+      "chapterNumber": 10,
+      "chapterId": "ch10",
+      "title": "前同事的电话",
+      "file": "story-assets/chapter-10-production-pack.json",
+      "targetDurationSec": 82,
+      "stage": "stage-03",
+      "hook": "以前他们觉得我只是个执行层，直到我走了，他们才发现有些事根本不是谁都能顶上。",
+      "nextHook": "而就在我以为一切终于稳下来的时候，真正开始起量的，不只是我的副业。"
+    },
+    {
+      "chapterNumber": 11,
+      "chapterId": "ch11",
+      "title": "副业开始爆单",
+      "file": "story-assets/chapter-11-production-pack.json",
+      "targetDurationSec": 84,
+      "stage": "stage-04",
+      "hook": "我终于发现，我卖的不是一个小工具，而是一整套能帮人赚钱的能力。",
+      "nextHook": "而就在我开始真正往上走的时候，那个曾经最先看不起我的人，也终于想起了我。"
+    },
+    {
+      "chapterNumber": 12,
+      "chapterId": "ch12",
+      "title": "苏晚开始回头",
+      "file": "story-assets/chapter-12-production-pack.json",
+      "targetDurationSec": 82,
+      "stage": "stage-04",
+      "hook": "她不是突然关心我了，她只是开始确认：我是不是已经重新值钱了。",
+      "nextHook": "这一次，他们终于开始求我回去。可惜，我已经不需要了。"
+    },
+    {
+      "chapterNumber": 13,
+      "chapterId": "ch13",
+      "title": "公司提出回聘",
+      "file": "story-assets/chapter-13-production-pack.json",
+      "targetDurationSec": 84,
+      "stage": "stage-04",
+      "hook": "上次我来这间会议室，是来签离职协议；这一次，他们请我回来谈条件。",
+      "nextHook": "我把那份offer推了回去，然后第一次当着他们的面，把那口气真正吐了出来。"
+    },
+    {
+      "chapterNumber": 14,
+      "chapterId": "ch14",
+      "title": "当面打脸",
+      "file": "story-assets/chapter-14-production-pack.json",
+      "targetDurationSec": 86,
+      "stage": "stage-04",
+      "hook": "你们看重的不是人才，是你们现在没人能顶。",
+      "nextHook": "真正让他们坐不住的，不是我拒绝回去，而是客户很快就会做出更狠的选择。"
+    },
+    {
+      "chapterNumber": 15,
+      "chapterId": "ch15",
+      "title": "最大客户倒戈",
+      "file": "story-assets/chapter-15-production-pack.json",
+      "targetDurationSec": 86,
+      "stage": "stage-04",
+      "hook": "真正让他们坐不住的，不是我拒绝回去，而是客户真的开始绕开他们，直接来找我。",
+      "nextHook": "当我开始考虑怎么把这条路做得更大时，我才发现，一个人已经快扛不住了。"
+    },
+    {
+      "chapterNumber": 16,
+      "chapterId": "ch16",
+      "title": "新的团队雏形",
+      "file": "story-assets/chapter-16-production-pack.json",
+      "targetDurationSec": 84,
+      "stage": "stage-05",
+      "hook": "如果我还是一个人硬扛，那我不过是换个地方重演旧生活。",
+      "nextHook": "就在我以为自己终于把路走顺的时候，那个曾经最先看不起我的人，也终于低下了头。"
+    },
+    {
+      "chapterNumber": 17,
+      "chapterId": "ch17",
+      "title": "苏晚彻底看清",
+      "file": "story-assets/chapter-17-production-pack.json",
+      "targetDurationSec": 84,
+      "stage": "stage-05",
+      "hook": "你不是看错人了，你只是一直在选对自己最有利的那个人。",
+      "nextHook": "可就在我刚把这段关系彻底翻篇的时候，另一边，他们又开始试图用更难看的方式把我拖回去。"
+    },
+    {
+      "chapterNumber": 18,
+      "chapterId": "ch18",
+      "title": "公开反杀",
+      "file": "story-assets/chapter-18-production-pack.json",
+      "targetDurationSec": 84,
+      "stage": "stage-05",
+      "hook": "我不需要吵赢他们，我只需要把事实摆出来。",
+      "nextHook": "而真正让我确认自己已经彻底翻身的，不是这次舆论反杀，而是月底算账时跳出来的那个数字。"
+    },
+    {
+      "chapterNumber": 19,
+      "chapterId": "ch19",
+      "title": "月入两万只是开始",
+      "file": "story-assets/chapter-19-production-pack.json",
+      "targetDurationSec": 84,
+      "stage": "stage-05",
+      "hook": "月入两万对别人可能只是个数字，对我来说，是我第一次确认自己真的走对了路。",
+      "nextHook": "而真正让我彻底明白自己已经回不去了的，不是这个数字，而是他们后来开出的那个更高的价码。"
+    },
+    {
+      "chapterNumber": 20,
+      "chapterId": "ch20",
+      "title": "求我回去的人，已经排不上号",
+      "file": "story-assets/chapter-20-production-pack.json",
+      "targetDurationSec": 88,
+      "stage": "stage-05",
+      "hook": "不是价格问题，是优先级问题——真正需要排队的人，早就不是我了。",
+      "nextHook": "END"
+    }
+  ]
+}
