@@ -6,13 +6,13 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "story": "tsx story-cli.ts",
-    "chapter": "tsx chapter-cli.ts",
-    "assets": "tsx assets-cli.ts",
-    "render": "tsx render-cli.ts",
-    "full": "tsx full-pipeline-cli.ts",
-    "delivery": "tsx delivery-export-cli.ts",
-    "batch": "tsx story-batch.ts",
+    "story": "npx tsx story-cli.ts",
+    "chapter": "npx tsx chapter-cli.ts",
+    "assets": "npx tsx assets-cli.ts",
+    "render": "npx tsx render-cli.ts",
+    "full": "npx tsx full-pipeline-cli.ts",
+    "delivery": "npx tsx delivery-export-cli.ts",
+    "batch": "npx tsx story-batch.ts",
     "test": "node --test --import tsx"
   },
   "dependencies": {
