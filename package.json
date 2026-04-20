@@ -9,6 +9,7 @@
     "story": "npx tsx story-cli.ts",
     "chapter": "npx tsx chapter-cli.ts",
     "chapter:full": "npx tsx chapter-full-cli.ts",
+    "chapter:batch": "npx tsx chapter-batch-cli.ts",
     "assets": "npx tsx assets-cli.ts",
     "render": "npx tsx render-cli.ts",
     "full": "npx tsx full-pipeline-cli.ts",

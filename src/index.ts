@@ -17,3 +17,4 @@ export * from './delivery-export-factory';
 export * from './chapter-adapter';
 export * from './chapter-full-pipeline';
 export * from './chapter-full-pipeline-factory';
+export * from './chapter-batch';
