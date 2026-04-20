@@ -15,3 +15,5 @@ export * from './full-pipeline-factory';
 export * from './delivery-kit';
 export * from './delivery-export-factory';
 export * from './chapter-adapter';
+export * from './chapter-full-pipeline';
+export * from './chapter-full-pipeline-factory';
