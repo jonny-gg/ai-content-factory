@@ -1,22 +1,12 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { formatChapterBatchResult, runChapterBatch } from './src/chapter-batch';
-
-function parseChapterNumbers(input?: string): number[] | undefined {
-  if (!input?.trim()) return undefined;
-  return input
-    .split(',')
-    .map((value) => Number(value.trim()))
-    .filter((value) => Number.isInteger(value) && value > 0);
-}
+import { runChapterFullPipelineCli } from '../chapter-full-pipeline-factory';
 
 async function main() {
   const program = new Command();
 
   program
-    .requiredOption('--index <path>', 'Path to production-pack-index.json')
-    .option('--chapters <list>', 'Comma-separated chapter numbers, e.g. 1,2,3')
-    .option('--stage <stageId>', 'Run all chapters in a stage, e.g. stage-01')
+    .requiredOption('--chapter-pack <path>', 'Path to chapter-xx-production-pack.json')
     .option('--output-root <path>', 'Output root directory for generated chapter artifacts')
     .option('--niche <niche>', 'Override niche label')
     .option('--genre <genre>', 'Override genre label')
@@ -33,10 +23,8 @@ async function main() {
   program.parse(process.argv);
   const options = program.opts();
 
-  const result = await runChapterBatch({
-    indexPath: options.index,
-    chapterNumbers: parseChapterNumbers(options.chapters),
-    stage: options.stage,
+  await runChapterFullPipelineCli({
+    chapterPackPath: options.chapterPack,
     outputRoot: options.outputRoot,
     niche: options.niche,
     genre: options.genre,
@@ -50,8 +38,6 @@ async function main() {
     keepTemp: options.keepTemp,
     dryRun: options.dryRun,
   });
-
-  console.log(formatChapterBatchResult(result));
 }
 
 main().catch((error) => {

@@ -1,4 +1,3 @@
-import fetch, { type RequestInit } from 'node-fetch';
 import { z } from 'zod';
 import { withRetry, withTimeout } from './pipeline-utils';
 

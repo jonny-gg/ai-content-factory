@@ -1,5 +1,5 @@
 // test-daily.js - 测试每日任务（小规模）
-const { dailyTask } = require('./daily-job.js');
+const { dailyTask } = require('../daily-job.js');
 
 // 测试配置：只生成2张图
 async function smallScaleTest() {

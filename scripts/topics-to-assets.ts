@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { createExecutionPack, type RankedTopicInput } from './src/topic-execution-pack';
+import { createExecutionPack, type RankedTopicInput } from '../src/topic-execution-pack';
 
 type SupportedPlatform = 'douyin' | 'xiaohongshu' | 'tiktok' | 'youtube-shorts' | 'bilibili';
 

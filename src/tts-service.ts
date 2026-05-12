@@ -1,5 +1,4 @@
 // src/tts-service.ts
-import fetch from 'node-fetch';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -23,7 +22,7 @@ export class TTSService {
       throw new Error(`Google TTS API error: ${response.statusText}`);
     }
 
-    const buffer = await response.buffer();
+    const buffer = Buffer.from(await response.arrayBuffer());
 
     if (outputPath) {
       const dir = path.dirname(outputPath);
@@ -55,7 +54,7 @@ export class TTSService {
       throw new Error(`VoiceRSS API error: ${response.statusText}`);
     }
 
-    const buffer = await response.buffer();
+    const buffer = Buffer.from(await response.arrayBuffer());
 
     if (outputPath) {
       const dir = path.dirname(outputPath);

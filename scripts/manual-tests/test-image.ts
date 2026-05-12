@@ -1,5 +1,5 @@
 // test-image.ts - 测试图像生成
-import { ImageService } from './src/index';
+import { ImageService } from '../../src/index';
 
 async function testImageGeneration() {
   console.log('=================================');

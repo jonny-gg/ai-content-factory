@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { runStoryGenerationCli } from './src/story-factory';
+import { runStoryGenerationCli } from '../story-factory';
 
 function getFlagValue(args: string[], flag: string): string | undefined {
   const index = args.indexOf(flag);

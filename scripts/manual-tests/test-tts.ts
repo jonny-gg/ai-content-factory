@@ -1,5 +1,5 @@
 // test-tts.ts - 测试语音合成功能
-import { TTSService } from './src/index';
+import { TTSService } from '../../src/index';
 import * as fs from 'fs';
 
 async function testTTSService() {

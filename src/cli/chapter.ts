@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { buildChapterStory, formatBuildChapterStoryResult } from './src/chapter-adapter';
+import { buildChapterStory, formatBuildChapterStoryResult } from '../chapter-adapter';
 
 async function main() {
   const program = new Command();

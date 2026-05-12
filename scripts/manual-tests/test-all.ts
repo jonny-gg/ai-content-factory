@@ -1,5 +1,5 @@
 // test-all.ts - 完整测试：图像 + 语音
-import { ImageService, TTSService } from './src/index';
+import { ImageService, TTSService } from '../../src/index';
 import * as fs from 'fs';
 import * as path from 'path';
 

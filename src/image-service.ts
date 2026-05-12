@@ -1,5 +1,4 @@
 // src/image-service.ts
-import fetch from 'node-fetch';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -43,7 +42,7 @@ export class ImageService {
       throw new Error(`Hugging Face API error: ${error}`);
     }
 
-    return await response.buffer();
+    return Buffer.from(await response.arrayBuffer());
   }
 
   // 生成并保存图片

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { runFullPipelineCli } from './src/full-pipeline-factory';
+import { runFullPipelineCli } from '../full-pipeline-factory';
 
 async function main() {
   const program = new Command();

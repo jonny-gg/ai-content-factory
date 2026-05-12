@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { runAssetsGenerationCli } from './src/assets-factory';
+import { runAssetsGenerationCli } from '../assets-factory';
 
 async function main() {
   const program = new Command();

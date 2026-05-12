@@ -1,5 +1,5 @@
 // demo.ts - 演示AI内容工厂的核心功能
-import { ImageService } from './src/index';
+import { ImageService } from '../../src/index';
 
 async function runDemo() {
   console.log('=================================');

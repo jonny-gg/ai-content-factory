@@ -23,7 +23,7 @@ async function main() {
   const results: Array<{ niche: StoryNiche; output: string }> = [];
 
   for (const niche of niches) {
-    const command = ['npx', 'ts-node', 'story-weekly.ts', niche, platform, String(days), ...(dryRun ? ['--dry-run'] : [])].join(' ');
+    const command = ['npx', 'tsx', 'scripts/story-weekly.ts', niche, platform, String(days), ...(dryRun ? ['--dry-run'] : [])].join(' ');
     const output = execSync(command, {
       cwd: process.cwd(),
       encoding: 'utf-8',

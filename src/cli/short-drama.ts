@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { runShortDramaCli } from './src/short-drama-factory';
+import { runShortDramaCli } from '../short-drama-factory';
 
 function getFlagValue(args: string[], flag: string): string | undefined {
   const index = args.indexOf(flag);

@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'ai-content-daily-job',
-    script: 'daily-job.js',
+    script: 'scripts/daily-job.js',
     cwd: '/root/.openclaw/workspace-makemoney_jonny/ai-content-factory',
     instances: 1,
     cron_restart: '0 9 * * *',  // 每天9点

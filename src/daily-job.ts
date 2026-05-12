@@ -185,7 +185,7 @@ export async function runDailyJob(env: NodeJS.ProcessEnv = process.env): Promise
   }
 }
 
-if (require.main === module) {
+if (typeof require !== 'undefined' && typeof module !== 'undefined' && require.main === module) {
   runDailyJob().catch(() => {
     process.exitCode = 1;
   });

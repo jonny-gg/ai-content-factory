@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { Response, type RequestInit } from 'node-fetch';
 import { StoryLLMService } from '../src/story-llm';
 
 async function run(): Promise<void> {

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { diversifyTopics } from './src/topic-diversifier';
+import { diversifyTopics } from '../src/topic-diversifier';
 
 interface Weights {
   speedToProduce: number;

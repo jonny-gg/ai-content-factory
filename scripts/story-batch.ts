@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { resolveStoryRun } from './src/story-factory';
+import { resolveStoryRun } from '../src/story-factory';
 
 interface BatchItem {
   niche?: string;
@@ -24,6 +24,7 @@ async function main() {
     const resolved = resolveStoryRun({
       topic: item.topic,
       style: item.style,
+      allowMissingLlmApiKey: true,
     });
 
     return {

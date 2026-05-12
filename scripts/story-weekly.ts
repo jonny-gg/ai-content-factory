@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { resolveStoryRun } from './src/story-factory';
+import { resolveStoryRun } from '../src/story-factory';
 
 type StoryPlatform = 'douyin' | 'xiaohongshu' | 'tiktok' | 'youtube-shorts' | 'bilibili';
 type StoryNiche = 'horror' | 'twist' | 'anime' | 'general';
@@ -45,7 +45,7 @@ async function main() {
   fs.mkdirSync(weeklyDir, { recursive: true });
 
   const items = selectedTopics.map((topic, index) => {
-    const resolved = resolveStoryRun({ topic, style: niche, dryRun });
+    const resolved = resolveStoryRun({ topic, style: niche, dryRun, allowMissingLlmApiKey: true });
     return {
       day: index + 1,
       topic,

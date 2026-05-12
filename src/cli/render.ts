@@ -1,28 +1,27 @@
-#!/usr/bin/env node
 import { Command } from 'commander';
-import { runDeliveryExportCli } from './src/delivery-export-factory';
+import { runRenderVideoCli } from '../render-factory';
 
 async function main() {
   const program = new Command();
 
   program
-    .option('--run-dir <path>', 'Existing run directory containing manifests')
     .option('--story-package <path>', 'Path to story-package.json')
     .option('--asset-manifest <path>', 'Path to asset-manifest.json')
-    .option('--render-manifest <path>', 'Path to render-manifest.json');
+    .option('--run-dir <path>', 'Override output run directory')
+    .option('--dry-run', 'Write placeholder final output instead of running real render', false);
 
   program.parse(process.argv);
   const options = program.opts();
 
-  await runDeliveryExportCli({
-    runDir: options.runDir,
+  await runRenderVideoCli({
     storyPackagePath: options.storyPackage,
     assetManifestPath: options.assetManifest,
-    renderManifestPath: options.renderManifest,
+    runDir: options.runDir,
+    dryRun: options.dryRun,
   });
 }
 
 main().catch((error) => {
-  console.error(error instanceof Error ? error.message : String(error));
+  console.error(error instanceof Error ? error.message : error);
   process.exitCode = 1;
 });
