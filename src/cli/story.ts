@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import 'dotenv/config';
 import { runStoryGenerationCli } from '../story-factory';
 
 function getFlagValue(args: string[], flag: string): string | undefined {

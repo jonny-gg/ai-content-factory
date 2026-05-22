@@ -123,7 +123,7 @@ function ensureRenderableTracks(renderTracks: RenderTrack[]): void {
 }
 
 function execFfmpeg(args: string[]): void {
-  execFileSync('ffmpeg', ['-y', ...args], {
+  execFileSync('ffmpeg', ['-hide_banner', '-loglevel', 'warning', '-y', ...args], {
     stdio: 'inherit',
   });
 }
@@ -169,10 +169,11 @@ function concatClips(sceneClipPaths: string[], concatFilePath: string, outputPat
 
 function burnSubtitles(inputPath: string, srtPath: string, outputPath: string): void {
   const escaped = srtPath.replace(/\\/g, '/').replace(/:/g, '\\:').replace(/'/g, "\\'");
+  const subtitleStyle = 'FontName=Noto Sans CJK SC,FontSize=18,Outline=1,Shadow=0';
 
   execFfmpeg([
     '-i', inputPath,
-    '-vf', `subtitles='${escaped}'`,
+    '-vf', `subtitles='${escaped}':force_style='${subtitleStyle}'`,
     '-c:v', 'libx264',
     '-pix_fmt', 'yuv420p',
     '-c:a', 'aac',

@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { deflateSync } from 'node:zlib';
 import { writeDeliveryChecklist } from '../delivery-kit';
 import { ensureDir, writeJsonFile } from '../env-config';
 import type { AssetManifest, AssetAudioItem, AssetImageItem, StoryPackage } from '../core/types';
@@ -53,14 +54,91 @@ function buildSceneText(storyPackage: StoryPackage, scene: StoryPackage['scenes'
     .trim();
 }
 
+function crc32(buffer: Buffer): number {
+  let crc = 0xffffffff;
+
+  for (const byte of buffer) {
+    crc ^= byte;
+    for (let bit = 0; bit < 8; bit += 1) {
+      crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0);
+    }
+  }
+
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function createPngChunk(type: string, data: Buffer): Buffer {
+  const typeBuffer = Buffer.from(type, 'ascii');
+  const length = Buffer.alloc(4);
+  const checksum = Buffer.alloc(4);
+
+  length.writeUInt32BE(data.length, 0);
+  checksum.writeUInt32BE(crc32(Buffer.concat([typeBuffer, data])), 0);
+
+  return Buffer.concat([length, typeBuffer, data, checksum]);
+}
+
+function createSolidPng(width: number, height: number, rgb: [number, number, number]): Buffer {
+  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(width, 0);
+  ihdr.writeUInt32BE(height, 4);
+  ihdr[8] = 8;
+  ihdr[9] = 2;
+  ihdr[10] = 0;
+  ihdr[11] = 0;
+  ihdr[12] = 0;
+
+  const row = Buffer.alloc(1 + width * 3);
+  row[0] = 0;
+  for (let offset = 1; offset < row.length; offset += 3) {
+    row[offset] = rgb[0];
+    row[offset + 1] = rgb[1];
+    row[offset + 2] = rgb[2];
+  }
+
+  const raw = Buffer.concat(Array.from({ length: height }, () => row));
+  return Buffer.concat([
+    signature,
+    createPngChunk('IHDR', ihdr),
+    createPngChunk('IDAT', deflateSync(raw)),
+    createPngChunk('IEND', Buffer.alloc(0)),
+  ]);
+}
+
+function createSilentWav(durationSec: number, sampleRate = 16000): Buffer {
+  const safeDuration = Math.max(0.1, durationSec);
+  const samples = Math.ceil(safeDuration * sampleRate);
+  const dataSize = samples * 2;
+  const buffer = Buffer.alloc(44 + dataSize);
+
+  buffer.write('RIFF', 0, 'ascii');
+  buffer.writeUInt32LE(36 + dataSize, 4);
+  buffer.write('WAVE', 8, 'ascii');
+  buffer.write('fmt ', 12, 'ascii');
+  buffer.writeUInt32LE(16, 16);
+  buffer.writeUInt16LE(1, 20);
+  buffer.writeUInt16LE(1, 22);
+  buffer.writeUInt32LE(sampleRate, 24);
+  buffer.writeUInt32LE(sampleRate * 2, 28);
+  buffer.writeUInt16LE(2, 32);
+  buffer.writeUInt16LE(16, 34);
+  buffer.write('data', 36, 'ascii');
+  buffer.writeUInt32LE(dataSize, 40);
+
+  return buffer;
+}
+
 function createFallbackImage(outputPath: string, scene: StoryPackage['scenes'][number]): void {
   ensureDir(path.dirname(outputPath));
-  fs.writeFileSync(outputPath, JSON.stringify({
-    placeholder: true,
-    reason: 'image-generation-failed',
-    sceneId: scene.sceneId,
-    visualPrompt: scene.visualPrompt
-  }, null, 2), 'utf8');
+  fs.writeFileSync(outputPath, createSolidPng(1080, 1920, [18, 24, 38]));
+}
+
+function createFallbackAudio(outputPath: string, scene: StoryPackage['scenes'][number]): string {
+  const wavPath = outputPath.replace(/\.[^.]+$/, '.wav');
+  ensureDir(path.dirname(wavPath));
+  fs.writeFileSync(wavPath, createSilentWav(scene.durationSec));
+  return wavPath;
 }
 
 async function generateImages(
@@ -70,7 +148,14 @@ async function generateImages(
 ): Promise<AssetImageItem[]> {
   if (options.skipImages) return [];
 
-  const imageService = options.dryRun ? null : new ImageService();
+  let imageService: ImageService | null = null;
+  if (!options.dryRun) {
+    try {
+      imageService = new ImageService();
+    } catch (error) {
+      console.warn('Image service unavailable, using local fallback images:', error);
+    }
+  }
   const images: AssetImageItem[] = [];
 
   for (const scene of storyPackage.scenes) {
@@ -121,11 +206,10 @@ async function generateAudio(
     const outputPath = path.join(audioDir, `${String(scene.order).padStart(2, '0')}-${scene.sceneId}.mp3`);
 
     if (options.dryRun) {
-      ensureDir(path.dirname(outputPath));
-      fs.writeFileSync(outputPath, text || `scene ${scene.sceneId}`, 'utf8');
+      const fallbackPath = createFallbackAudio(outputPath, scene);
       audio.push({
         sceneId: scene.sceneId,
-        path: outputPath,
+        path: fallbackPath,
         voice: options.audioVoice ?? 'zh-CN',
         durationSec: scene.durationSec,
       });
@@ -140,8 +224,13 @@ async function generateAudio(
       });
     } catch (error) {
       console.warn(`Audio generation failed for scene ${scene.sceneId}:`, error);
-      ensureDir(path.dirname(outputPath));
-      fs.writeFileSync(outputPath, text || `scene ${scene.sceneId}`, 'utf8');
+      audio.push({
+        sceneId: scene.sceneId,
+        path: createFallbackAudio(outputPath, scene),
+        voice: options.audioVoice ?? 'zh-CN',
+        durationSec: scene.durationSec,
+      });
+      continue;
     }
 
     audio.push({

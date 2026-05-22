@@ -20,6 +20,7 @@
     "full": "npx tsx src/cli/full-pipeline.ts",
     "delivery": "npx tsx src/cli/delivery-export.ts",
     "daily": "node scripts/daily-job.js",
+    "ops-console": "npx tsx src/ops-console/cli.ts",
     "topics:pick": "npx tsx scripts/topic-picker.ts",
     "topics:monetize": "npx tsx scripts/topic-monetization.ts",
     "topics:monetize:diverse": "npx tsx scripts/topic-monetization.ts 10 --diverse --max-per-niche=2 --min-distinct=3",

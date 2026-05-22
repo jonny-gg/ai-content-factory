@@ -117,6 +117,20 @@ npm run test:tts
 npm run test:all
 ```
 
+### 内部运营台（V1）
+
+```bash
+npm run ops-console
+```
+
+默认打开：`http://localhost:3210`
+
+当前能力：
+- Dashboard 概览最近 runs / failures / runtime readiness
+- 浏览 execution packs、story runs、daily runs、weekly outputs
+- 从前端触发 story、execution-pack、daily job
+- 跟踪最小任务状态：queued / running / succeeded / failed
+
 ## 目录结构
 
 ```text

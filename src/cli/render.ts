@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import 'dotenv/config';
 import { runRenderVideoCli } from '../render-factory';
 
 async function main() {

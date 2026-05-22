@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import 'dotenv/config';
 import { runAssetsGenerationCli } from '../assets-factory';
 
 async function main() {
