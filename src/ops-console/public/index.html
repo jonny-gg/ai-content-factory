@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Content Factory Ops Console</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <h1>Ops Console</h1>
+        <nav>
+          <button data-view="dashboard" class="nav-button active">Dashboard</button>
+          <button data-view="runs" class="nav-button">Runs</button>
+          <button data-view="trigger" class="nav-button">Trigger</button>
+          <button data-view="tasks" class="nav-button">Tasks</button>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="page-header">
+          <div>
+            <h2 id="page-title">Dashboard</h2>
+            <p id="page-subtitle">Internal console for AI content operations.</p>
+          </div>
+          <button id="refresh-button">Refresh</button>
+        </header>
+
+        <section id="dashboard-view" class="view active">
+          <div id="dashboard-content"></div>
+        </section>
+
+        <section id="runs-view" class="view">
+          <div class="split-panel">
+            <div>
+              <div class="filter-row">
+                <label>
+                  Kind
+                  <select id="run-kind-filter">
+                    <option value="">All</option>
+                    <option value="story">Story</option>
+                    <option value="execution-pack">Execution Pack</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly-package">Weekly Package</option>
+                    <option value="weekly-matrix">Weekly Matrix</option>
+                  </select>
+                </label>
+              </div>
+              <div id="runs-list"></div>
+            </div>
+            <div id="run-detail" class="detail-panel empty">Select a run to inspect its artifacts.</div>
+          </div>
+        </section>
+
+        <section id="trigger-view" class="view">
+          <div class="trigger-grid">
+            <form id="story-form" class="card form-card">
+              <h3>Generate Story</h3>
+              <label>Topic<input name="topic" required placeholder="输入主题" /></label>
+              <label>Platform
+                <select name="platform">
+                  <option value="douyin">douyin</option>
+                  <option value="xiaohongshu">xiaohongshu</option>
+                  <option value="tiktok">tiktok</option>
+                </select>
+              </label>
+              <label>Style<input name="style" placeholder="可选" /></label>
+              <label class="checkbox"><input type="checkbox" name="dryRun" /> Dry run</label>
+              <button type="submit">Trigger Story</button>
+            </form>
+
+            <form id="execution-form" class="card form-card">
+              <h3>Generate Execution Pack</h3>
+              <label>Count<input name="count" type="number" value="3" min="1" max="20" /></label>
+              <label>Platform
+                <select name="platform">
+                  <option value="douyin">douyin</option>
+                  <option value="xiaohongshu">xiaohongshu</option>
+                  <option value="tiktok">tiktok</option>
+                </select>
+              </label>
+              <label class="checkbox"><input type="checkbox" name="diverseOnly" checked /> Diverse only</label>
+              <button type="submit">Trigger Execution Pack</button>
+            </form>
+
+            <form id="daily-form" class="card form-card">
+              <h3>Run Daily Job</h3>
+              <label class="checkbox"><input type="checkbox" name="dryRun" checked /> Dry run</label>
+              <button type="submit">Trigger Daily Job</button>
+            </form>
+          </div>
+          <div id="trigger-feedback"></div>
+        </section>
+
+        <section id="tasks-view" class="view">
+          <div id="tasks-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
