@@ -1,4 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
+import path from 'node:path';
+import { parse } from 'dotenv';
 import { loadAppConfig, ensureRequiredEnv, type AppConfig } from './env-config';
 
 export interface RuntimeConfig extends AppConfig {
@@ -11,12 +13,14 @@ export interface LoadRuntimeConfigOptions {
   configPath?: string;
   allowMissingLlmApiKey?: boolean;
   env?: NodeJS.ProcessEnv;
+  envFilePath?: string;
 }
 
 interface NormalizedLoadRuntimeConfigOptions {
   configPath?: string;
   allowMissingLlmApiKey: boolean;
   env: NodeJS.ProcessEnv;
+  envFilePath?: string;
 }
 
 function readJsonConfig(configPath?: string): Partial<RuntimeConfig> {
@@ -48,8 +52,25 @@ export function loadOptionalTemplate(templatePath?: string): string {
   return readFileSync(templatePath, 'utf8');
 }
 
-function buildEnvFromFileConfig(env: NodeJS.ProcessEnv, fileConfig: Partial<RuntimeConfig>): NodeJS.ProcessEnv {
+function readDotEnvFile(envFilePath?: string): NodeJS.ProcessEnv {
+  const resolvedPath = envFilePath || path.resolve(process.cwd(), '.env');
+  if (!existsSync(resolvedPath)) {
+    return {} as NodeJS.ProcessEnv;
+  }
+
+  const raw = readFileSync(resolvedPath, 'utf8');
+  return parse(raw) as NodeJS.ProcessEnv;
+}
+
+function buildEnvFromFileConfig(
+  env: NodeJS.ProcessEnv,
+  fileConfig: Partial<RuntimeConfig>,
+  envFilePath?: string
+): NodeJS.ProcessEnv {
+  const dotenvEnv = readDotEnvFile(envFilePath);
+
   return {
+    ...dotenvEnv,
     ...env,
     ...(fileConfig.llmApiKey ? { LLM_API_KEY: fileConfig.llmApiKey } : {}),
     ...(fileConfig.llmBaseUrl ? { LLM_BASE_URL: fileConfig.llmBaseUrl } : {}),
@@ -71,6 +92,7 @@ function isLoadRuntimeConfigOptions(value: unknown): value is LoadRuntimeConfigO
       'configPath' in (value as Record<string, unknown>)
       || 'allowMissingLlmApiKey' in (value as Record<string, unknown>)
       || 'env' in (value as Record<string, unknown>)
+      || 'envFilePath' in (value as Record<string, unknown>)
     );
 }
 
@@ -88,6 +110,7 @@ function normalizeOptions(configPathOrEnvOrOptions?: string | NodeJS.ProcessEnv 
       configPath: configPathOrEnvOrOptions.configPath,
       allowMissingLlmApiKey: configPathOrEnvOrOptions.allowMissingLlmApiKey ?? false,
       env: configPathOrEnvOrOptions.env ?? process.env,
+      envFilePath: configPathOrEnvOrOptions.envFilePath,
     };
   }
 
@@ -95,13 +118,14 @@ function normalizeOptions(configPathOrEnvOrOptions?: string | NodeJS.ProcessEnv 
     configPath: undefined,
     allowMissingLlmApiKey: false,
     env: configPathOrEnvOrOptions,
+    envFilePath: undefined,
   };
 }
 
 export function loadRuntimeConfig(configPathOrEnvOrOptions?: string | NodeJS.ProcessEnv | LoadRuntimeConfigOptions): RuntimeConfig {
   const options = normalizeOptions(configPathOrEnvOrOptions);
   const fileConfig = readJsonConfig(options.configPath);
-  const mergedEnv = buildEnvFromFileConfig(options.env, fileConfig);
+  const mergedEnv = buildEnvFromFileConfig(options.env, fileConfig, options.envFilePath);
   const config = loadAppConfig(mergedEnv);
 
   if (!options.allowMissingLlmApiKey) {

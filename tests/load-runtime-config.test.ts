@@ -10,6 +10,7 @@ function run(): void {
   try {
     const configPath = join(dir, 'config.json');
     const templatePath = join(dir, 'template.txt');
+    const envFilePath = join(dir, '.env');
 
     writeFileSync(configPath, JSON.stringify({
       llmApiKey: 'file-key',
@@ -25,9 +26,16 @@ function run(): void {
       template: 'inline template'
     }, null, 2));
     writeFileSync(templatePath, 'hello template');
+    writeFileSync(envFilePath, [
+      'LLM_API_KEY=env-file-key',
+      'LLM_BASE_URL=https://env-file.example/v1',
+      'LLM_MODEL=env-file-model',
+      'REQUEST_TIMEOUT_MS=9000'
+    ].join('\n'));
 
     const config = loadRuntimeConfig({
       configPath,
+      envFilePath,
       env: {
         OPENAI_API_KEY: 'fallback-openai-key'
       } as NodeJS.ProcessEnv
@@ -36,6 +44,9 @@ function run(): void {
     assert.equal(config.llmApiKey, 'file-key');
     assert.equal(config.llmBaseUrl, 'https://example.com/v1');
     assert.equal(config.llmModel, 'file-model');
+    assert.equal(loadRuntimeConfig({ envFilePath }).llmApiKey, 'env-file-key');
+    assert.equal(loadRuntimeConfig({ envFilePath }).llmBaseUrl, 'https://env-file.example/v1');
+    assert.equal(loadRuntimeConfig({ envFilePath }).llmModel, 'env-file-model');
     assert.equal(config.outputDir, './out');
     assert.equal(config.dryRun, true);
     assert.equal(config.requestTimeoutMs, 1234);
